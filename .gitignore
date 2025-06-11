@@ -1,0 +1,5 @@
+.venv
+sample.json
+*egg*
+dist
+.DS_Store
