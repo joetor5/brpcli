@@ -1,5 +1,5 @@
 .venv
-sample.json
 *egg*
 dist
+__pycache__
 .DS_Store

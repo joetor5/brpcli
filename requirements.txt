@@ -1,5 +1,6 @@
 backports.tarfile==1.2.0
 btcorerpc==0.1.2
+btcoreutil==0.1.0
 build==1.2.2.post1
 certifi==2025.4.26
 charset-normalizer==3.4.2
