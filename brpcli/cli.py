@@ -50,7 +50,7 @@ def print_uptime(rpc):
         uptime_str += f"{str(days)} day"
         uptime_str = append_s(uptime_str, days) + ", "
 
-    if hours > 0:
+    if int(hours) > 0:
         hours = (hours - 24 * days)
         uptime_str += f"{str(int(hours))} hour"
         uptime_str = append_s(uptime_str, hours) + ", "
