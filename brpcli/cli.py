@@ -31,6 +31,14 @@ def traffic(rpc):
     print(f"Sent: {traffic['out'] / conversion} (GB)")
     print(f"Received: {traffic['in'] / conversion} (GB)\n")
 
+@header
+def mempool(rpc):
+    mempool_info = rpc.get_mem_pool_info()["result"]
+    mem_usage = roound(mempool_info["mem_pool_info_usage"] / 1000000)
+    print(f"TX Count: {mempool_info['mem_pool_info_size']}")
+    print(f"Memory Usage: {mem_usage} MB")
+
+
 def print_uptime(rpc):
 
     def append_s(time_str, time_num):
@@ -71,7 +79,8 @@ def main(args):
 
     command_callbacks = {
         "connections"   : connections,
-        "traffic"       : traffic
+        "traffic"       : traffic,
+        "mempool"       : mempool
     }
 
     if args.command not in command_callbacks and args.command != "stats":
