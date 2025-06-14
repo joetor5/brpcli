@@ -34,9 +34,9 @@ def traffic(rpc):
 @header
 def mempool(rpc):
     mempool_info = rpc.get_mem_pool_info()["result"]
-    mem_usage = roound(mempool_info["mem_pool_info_usage"] / 1000000)
-    print(f"TX Count: {mempool_info['mem_pool_info_size']}")
-    print(f"Memory Usage: {mem_usage} MB")
+    mem_usage = round(mempool_info["usage"] / 1000000, 2)
+    print(f"TX Count: {mempool_info['size']}")
+    print(f"Memory Usage: {mem_usage} MB\n")
 
 
 def print_uptime(rpc):
