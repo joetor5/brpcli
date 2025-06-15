@@ -27,9 +27,30 @@ def connections(rpc):
 @header
 def traffic(rpc):
     traffic = rpcutil.get_node_traffic(rpc)
-    conversion = 1000000000
-    print(f"Sent: {traffic['out'] / conversion} (GB)")
-    print(f"Received: {traffic['in'] / conversion} (GB)\n")
+    conversion = {"gb": 1000000000
+                  "mb": 1000000}
+
+    sent_recv = {
+        "sent": [traffic["out"], "MB"],
+        "recv": [traffic["in"], "MB"]
+    }
+
+    for tdir in sent_recv:
+        tbytes = sent_recv[tdir][0]
+        gb_unit = False
+        if tbytes > conversion["gb"]:
+            num = round(tbytes / conversion["gb"], 2)
+            unit = "GB"
+            gb_unit = True
+        else:
+            num = round(tbytes / conversion["mb"], 2)
+
+        sent_recv[tdir][0] = num
+        if gb_unit:
+            sent_recv[tdir][1] = unit
+
+    print(f"Sent: {sent} {sent_unit}")
+    print(f"Received: {recv} {recv_unit}\n")
 
 @header
 def mempool(rpc):
