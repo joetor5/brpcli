@@ -27,8 +27,10 @@ def connections(rpc):
 @header
 def traffic(rpc):
     traffic = rpcutil.get_node_traffic(rpc)
-    conversion = {"gb": 1000000000
-                  "mb": 1000000}
+    conversion = {
+        "gb": 1000000000,
+        "mb": 1000000
+    }
 
     sent_recv = {
         "sent": [traffic["out"], "MB"],
