@@ -11,5 +11,6 @@ else
 fi
 
 source $PYVENV
+clear
 $BRPCLI "$@"
 

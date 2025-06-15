@@ -3,28 +3,34 @@
 
 from __version__ import __version__
 import sys
+import os
 import argparse
 from btcorerpc.rpc import BitcoinRpc
 import btcorerpc.util as rpcutil
 import btcoreutil
 
-def header(func):
+def fprint(func):
     def wrapper(*args, **kwargs):
         rpc_obj = args[0]
-        print(func.__name__.capitalize())
-        print(("-" * len(func.__name__)) * 2)
-        func(rpc_obj)
+        header = func.__name__.capitalize()
+        output = func(rpc_obj)
+        print(header)
+        print("-" * 25)
+        for field, data in output:
+            print(f"{field:<15}: {data}")
+        print()
 
     return wrapper
 
-@header
+@fprint
 def connections(rpc):
     conns = rpcutil.get_node_connections(rpc)
-    print(f"Inbound: {conns['in']}")
-    print(f"Outbound: {conns['out']}")
-    print(f"Total: {conns['total']}\n")
+    
+    return [("Inbound", conns['in']),
+            ("Outbound", conns['out']),
+            ("Total", conns['total'])]
 
-@header
+@fprint
 def traffic(rpc):
     traffic = rpcutil.get_node_traffic(rpc)
     conversion = {
@@ -50,16 +56,17 @@ def traffic(rpc):
         sent_recv[tdir][0] = num
         if gb_unit:
             sent_recv[tdir][1] = unit
+    
+    return [("Sent", f"{sent_recv['sent'][0]} {sent_recv['sent'][1]}"),
+            ("Received", f"{sent_recv['recv'][0]} {sent_recv['recv'][1]}")]
 
-    print(f"Sent: {sent_recv['sent'][0]} {sent_recv['sent'][1]}")
-    print(f"Received: {sent_recv['recv'][0]} {sent_recv['recv'][1]}\n")
-
-@header
+@fprint
 def mempool(rpc):
     mempool_info = rpc.get_mem_pool_info()["result"]
     mem_usage = round(mempool_info["usage"] / 1000000, 2)
-    print(f"TX Count: {mempool_info['size']}")
-    print(f"Memory Usage: {mem_usage} MB\n")
+    
+    return [("TX Count", f"{mempool_info['size']}"),
+            ("Memory Usage", f"{mem_usage} MB")]
 
 
 def print_uptime(rpc):
@@ -98,7 +105,11 @@ def print_uptime(rpc):
 def main(args):
 
     rpc_user, rpc_password = rpc_credentials = btcoreutil.get_bitcoin_rpc_credentials()
-    rpc = BitcoinRpc(rpc_user, rpc_password)
+    rpc_host = os.getenv("BITCOIN_RPC_HOST")
+    if not rpc_host:
+        rpc_host = "127.0.0.1"
+    
+    rpc = BitcoinRpc(rpc_user, rpc_password, rpc_host)
 
     command_callbacks = {
         "connections"   : connections,
