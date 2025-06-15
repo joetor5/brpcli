@@ -51,7 +51,7 @@ def traffic(rpc):
         if gb_unit:
             sent_recv[tdir][1] = unit
 
-    print(f"Sent: {sent_recv['sent'][0]} {sent_rcv['sent'][1]}")
+    print(f"Sent: {sent_recv['sent'][0]} {sent_recv['sent'][1]}")
     print(f"Received: {sent_recv['recv'][0]} {sent_recv['recv'][1]}\n")
 
 @header
