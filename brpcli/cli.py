@@ -130,7 +130,12 @@ def print_uptime(rpc):
 
     print(f"Node Uptime: {uptime_str}")
 
-def main(args):
+def main():
+
+    parser = argparse.ArgumentParser("brpcli")
+    parser.add_argument("-v", "--version", action="version", version=__version__)
+    parser.add_argument("command", type=str, help="command")
+    args = parser.parse_args()
 
     rpc_user, rpc_password = rpc_credentials = btcoreutil.get_bitcoin_rpc_credentials()
     rpc_host = os.getenv("BITCOIN_RPC_HOST")
@@ -163,10 +168,5 @@ def main(args):
     print_uptime(rpc)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--version", action="version", version=__version__)
-    parser.add_argument("command", type=str, help="command")
-    args = parser.parse_args()
-
-    main(args)
+    main()
 
