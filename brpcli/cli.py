@@ -8,14 +8,19 @@ import argparse
 from btcorerpc.rpc import BitcoinRpc
 import btcorerpc.util as rpcutil
 import btcoreutil
+from termcolor import colored, cprint
+
+BITCOIN_COLOR = (255, 165, 0)
 
 def fprint(func):
     def wrapper(*args, **kwargs):
         rpc_obj = args[0]
         header = func.__name__.capitalize()
         output = func(rpc_obj)
-        print(header)
-        print("-" * 25)
+
+        bcolor_print = lambda x: cprint(x, BITCOIN_COLOR, attrs=["bold"])
+        bcolor_print(header)
+        bcolor_print("-" * 25)
         for field, data in output:
             print(f"{field:<15}: {data}")
         print()
@@ -129,6 +134,7 @@ def print_uptime(rpc):
         uptime_str += append_s(f"{str(mins)} minute", mins)
 
     print(f"Node Uptime: {uptime_str}")
+
 
 def main():
 

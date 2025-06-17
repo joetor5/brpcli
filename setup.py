@@ -17,8 +17,9 @@ setup(
     license="MIT",
     platforms="any",
     install_requires=[
-        "btcorerpc==0.1.2",
-        "btcoreutil==0.1.0"
+        "btcorerpc",
+        "btcoreutil",
+        "termcolor"
     ],
     python_requires=">=3.8",
     entry_points={
