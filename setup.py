@@ -21,6 +21,11 @@ setup(
         "btcoreutil==0.1.0"
     ],
     python_requires=">=3.8",
+    entry_points={
+        "console_scripts":[
+            "brpcli=brpcli:main"
+        ]
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

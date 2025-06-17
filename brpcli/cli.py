@@ -39,23 +39,16 @@ def traffic(rpc):
     }
 
     sent_recv = {
-        "sent": [traffic["out"], "MB"],
-        "recv": [traffic["in"], "MB"]
+        "sent": [traffic["out"]],
+        "recv": [traffic["in"]]
     }
 
     for tdir in sent_recv:
         tbytes = sent_recv[tdir][0]
-        gb_unit = False
-        if tbytes > conversion["gb"]:
-            num = round(tbytes / conversion["gb"], 2)
-            unit = "GB"
-            gb_unit = True
-        else:
-            num = round(tbytes / conversion["mb"], 2)
+        tbytes, tbytes_unit = _get_bytes_conversion(tbytes)
 
-        sent_recv[tdir][0] = num
-        if gb_unit:
-            sent_recv[tdir][1] = unit
+        sent_recv[tdir][0] = tbytes
+        sent_recv[tdir].append(tbytes_unit)
     
     return [("Sent", f"{sent_recv['sent'][0]} {sent_recv['sent'][1]}"),
             ("Received", f"{sent_recv['recv'][0]} {sent_recv['recv'][1]}")]
@@ -68,6 +61,41 @@ def mempool(rpc):
     return [("TX Count", f"{mempool_info['size']}"),
             ("Memory Usage", f"{mem_usage} MB")]
 
+@fprint
+def blockchain(rpc):
+    info = rpc.get_blockchain_info()["result"]
+    
+    blocks = info["blocks"]
+    disk_usage, usage_unit = _get_bytes_conversion(info["size_on_disk"])
+    progress = round(info["verificationprogress"] * 100)
+
+    data =  [("Block Height", blocks),
+            ("Disk Usage", f"{disk_usage} {usage_unit}"),
+            ("Progress", f"{progress}%")]
+
+    if info["pruned"]:
+        prune_height = info["pruneheight"]
+        prune_target, unit = _get_bytes_conversion(info["prune_target_size"])
+        data.insert(1, ("Prune Height", prune_height))
+        data.insert(2, ("Prune Target", f"{prune_target} {unit}"))
+
+    return data
+        
+
+def _get_bytes_conversion(bytes_num):
+    conversion = {
+        "gb": 1000000000,
+        "mb": 1000000
+    }
+
+    if bytes_num > conversion["gb"]:
+        converted_bytes = round(bytes_num / conversion["gb"], 2)
+        unit = "GB"
+    else:
+        converted_bytes = round(bytes_num / conversion["mb"], 2)
+        unit = "MB"
+
+    return converted_bytes, unit
 
 def print_uptime(rpc):
 
@@ -112,9 +140,10 @@ def main(args):
     rpc = BitcoinRpc(rpc_user, rpc_password, rpc_host)
 
     command_callbacks = {
+        "blockchain"    : blockchain,
         "connections"   : connections,
         "traffic"       : traffic,
-        "mempool"       : mempool
+        "mempool"       : mempool,
     }
 
     if args.command not in command_callbacks and args.command != "stats":

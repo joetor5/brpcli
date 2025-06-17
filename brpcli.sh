@@ -6,7 +6,7 @@ if [[ -d brpcli && -d .git ]]; then
     BRPCLI="python3 brpcli/cli.py"
     PYVENV=".venv/bin/activate"
 else
-    BRPCLI="pybrpcli"
+    BRPCLI="brpcli"
     PYVENV="$HOME/.brpcli/.venv/bin/activate"
 fi
 
