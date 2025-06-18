@@ -1,5 +1,5 @@
 backports.tarfile==1.2.0
-btcorerpc==0.1.2
+btcorerpc==0.2.0
 btcoreutil==0.1.0
 build==1.2.2.post1
 certifi==2025.4.26
@@ -20,7 +20,7 @@ packaging==25.0
 Pygments==2.19.1
 pyproject_hooks==1.2.0
 readme_renderer==44.0
-requests==2.32.3
+requests==2.32.4
 requests-toolbelt==1.0.0
 rfc3986==2.0.0
 rich==14.0.0
