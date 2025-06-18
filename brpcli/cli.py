@@ -60,7 +60,7 @@ def traffic(rpc):
 
 @fprint
 def mempool(rpc):
-    mempool_info = rpc.get_mem_pool_info()["result"]
+    mempool_info = rpc.get_mem_pool_info()
     mem_usage = round(mempool_info["usage"] / 1000000, 2)
     
     return [("TX Count", f"{mempool_info['size']}"),
@@ -68,7 +68,7 @@ def mempool(rpc):
 
 @fprint
 def blockchain(rpc):
-    info = rpc.get_blockchain_info()["result"]
+    info = rpc.get_blockchain_info()
     
     blocks = info["blocks"]
     disk_usage, usage_unit = _get_bytes_conversion(info["size_on_disk"])
@@ -85,7 +85,12 @@ def blockchain(rpc):
         data.insert(2, ("Prune Target", f"{prune_target} {unit}"))
 
     return data
-        
+
+def print_uptime(rpc):
+
+    uptime_str = rpcutil.get_node_uptime(rpc)
+
+    print(f"Node Uptime: {uptime_str}")
 
 def _get_bytes_conversion(bytes_num):
     conversion = {
@@ -101,40 +106,6 @@ def _get_bytes_conversion(bytes_num):
         unit = "MB"
 
     return converted_bytes, unit
-
-def print_uptime(rpc):
-
-    def append_s(time_str, time_num):
-        if time_num > 1:
-            return time_str + "s"
-        else:
-            return time_str
-
-    uptime = rpc.uptime()["result"]
-    uptime_str = ""
-
-    mins = uptime / 60
-    hours = mins / 60
-    days = int(hours / 24)
-
-    if days > 0:
-        uptime_str += f"{str(days)} day"
-        uptime_str = append_s(uptime_str, days) + ", "
-
-    if int(hours) > 0:
-        hours = (hours - 24 * days)
-        uptime_str += f"{str(int(hours))} hour"
-        uptime_str = append_s(uptime_str, hours) + ", "
-
-        mins = int((hours - int(hours)) * 60)
-        uptime_str += f"{str(mins)} minute"
-        uptime_str = append_s(uptime_str, mins)
-    else:
-        mins = int(mins)
-        uptime_str += append_s(f"{str(mins)} minute", mins)
-
-    print(f"Node Uptime: {uptime_str}")
-
 
 def main():
 
