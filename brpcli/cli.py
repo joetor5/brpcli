@@ -92,6 +92,11 @@ def print_uptime(rpc):
 
     print(f"Node Uptime: {uptime_str}")
 
+def print_version(rpc):
+    version = rpcutil.get_node_version(rpc)
+
+    print(f"Node Version: {version}")
+
 def _get_bytes_conversion(bytes_num):
     conversion = {
         "gb": 1000000000,
@@ -143,6 +148,7 @@ def main():
         command_callbacks[args.command](rpc)
 
     print_uptime(rpc)
+    print_version(rpc)
 
 if __name__ == "__main__":
     main()
